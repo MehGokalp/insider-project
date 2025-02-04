@@ -4,12 +4,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	pkgMessengerList "github.com/mehgokalp/insider-project/cmd/server/modules/messenger/list"
-	pkgMessengerStartStop "github.com/mehgokalp/insider-project/cmd/server/modules/messenger/start_stop"
+	pkgMessageList "github.com/mehgokalp/insider-project/cmd/server/modules/message/list"
+	pkgMessageStartStop "github.com/mehgokalp/insider-project/cmd/server/modules/message/start_stop"
 	"github.com/mehgokalp/insider-project/pkg/config"
 	pkgDatabaseRepository "github.com/mehgokalp/insider-project/pkg/database/repository"
 	"github.com/mehgokalp/insider-project/pkg/log"
 	"github.com/mehgokalp/insider-project/pkg/meta"
+	pkgRedisRepository "github.com/mehgokalp/insider-project/pkg/redis/repository"
 	"github.com/spf13/cobra"
 	"time"
 )
@@ -18,6 +19,7 @@ func Server(
 	cfg *config.Config,
 	logger log.Logger,
 	messageRepository *pkgDatabaseRepository.MessageRepository,
+	redisMessageEngineRepository *pkgRedisRepository.MessageEngineRepository,
 ) *cobra.Command {
 	cmdName := "server"
 
@@ -28,6 +30,7 @@ func Server(
 			r := getRouter(
 				logger,
 				messageRepository,
+				redisMessageEngineRepository,
 			)
 
 			if err := r.Run(fmt.Sprintf(":%v", cfg.Port)); err != nil {
@@ -42,6 +45,7 @@ func Server(
 func getRouter(
 	logger log.Logger,
 	messageRepository *pkgDatabaseRepository.MessageRepository,
+	redisMessageEngineRepository *pkgRedisRepository.MessageEngineRepository,
 ) *gin.Engine {
 	r := gin.New()
 	r.Use(gin.ErrorLogger())
@@ -50,8 +54,8 @@ func getRouter(
 
 	v1 := r.Group("/v1")
 
-	v1.GET("/messenger/", pkgMessengerList.NewHandler(logger, messageRepository))
-	v1.PUT("/messenger/start-stop", pkgMessengerStartStop.NewHandler(logger))
+	v1.GET("/messages/", pkgMessageList.NewHandler(logger, messageRepository))
+	v1.PATCH("/messages/", pkgMessageStartStop.NewHandler(logger, redisMessageEngineRepository))
 
 	return r
 }

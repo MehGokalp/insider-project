@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"github.com/go-redis/redis/v8"
 	"github.com/mehgokalp/insider-project/cmd"
-	"github.com/mehgokalp/insider-project/cmd/engine/messenger"
+	"github.com/mehgokalp/insider-project/cmd/engine/message"
 	"github.com/mehgokalp/insider-project/cmd/server"
 	"github.com/mehgokalp/insider-project/pkg/config"
 	"github.com/mehgokalp/insider-project/pkg/database"
@@ -55,16 +55,18 @@ func main() {
 	redisClient := redis.NewClient(redisOpt)
 
 	redisMessageRepository := pkgRedisRepository.NewMessageRepository(redisClient, pkgRedisRepository.MessageRepositoryPrefix)
+	redisMessageEngineRepository := pkgRedisRepository.NewMessageEngineRepository(redisClient)
 
 	rootCmd.AddCommand(
 		server.Server(
 			cfg,
 			logger,
 			messageRepository,
+			redisMessageEngineRepository,
 		),
 	)
 
-	rootCmd.AddCommand(messenger.MessengerCmd(ctx, logger, requester, redisMessageRepository))
+	rootCmd.AddCommand(message.MessageCmd(ctx, logger, requester, redisMessageRepository))
 	rootCmd.AddCommand(cmd.PopulateCmd(db))
 
 	if err := rootCmd.Execute(); err != nil {

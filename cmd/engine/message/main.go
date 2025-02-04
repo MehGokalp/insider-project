@@ -1,4 +1,4 @@
-package messenger
+package message
 
 import (
 	"context"
@@ -8,15 +8,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func MessengerCmd(ctx context.Context, logger pkgLog.Logger, requester *webhook.Requester, redisMessageRepository *pkgRedisRepository.MessageRepository) *cobra.Command {
-	cmdName := "engine:messenger"
+func MessageCmd(ctx context.Context, logger pkgLog.Logger, requester *webhook.Requester, redisMessageRepository *pkgRedisRepository.MessageRepository) *cobra.Command {
+	cmdName := "engine:message"
 
 	return &cobra.Command{
 		Use:   cmdName,
-		Short: "Run messenger engine",
+		Short: "Run message engine",
 		RunE: func(cmd *cobra.Command, _ []string) error {
 
-			logger.Infof("Messenger engine is running")
+			logger.Infof("Message engine is running")
 
 			return nil
 		},
