@@ -3,21 +3,22 @@ services:
     build:
       context: .
     restart: on-failure
+    ports:
+      - "8081:8080"
     environment:
       ENV: "dev"
       PORT: 8080
       MYSQL_DSN: "user:password@tcp(app_mysql:3306)/messages?charset=utf8mb4&parseTime=True&loc=Local"
-      REDIS_DSN: "redis://:@app_redis:6380"
-      MESSAGE_PROVIDER_BASE_URL: "https://webhook.site"
+      REDIS_DSN: "redis://:@app_redis:6379"
+      MESSAGE_PROVIDER_BASE_URL: "https://webhook.site/c64524ad-0776-4750-a086-6031c55c0fe0"
 
   app_redis:
     image: redis:6.0-alpine
     restart: on-failure
-    command: --port 6380
     expose:
-      - "6380"
+      - "6379"
     ports:
-      - "6380:6380"
+      - "6379:6379"
 
   app_mysql:
     image: mysql:8.4
