@@ -8,5 +8,5 @@ type Message struct {
 	Content   string    `gorm:"not null"`
 	Sent      bool      `gorm:"default:false"`
 	SentAt    time.Time `gorm:"default:null"`
-	MessageID string    `gorm:"default:null"`
+	MessageId string    `gorm:"default:null"`
 }

@@ -5,6 +5,7 @@ import (
 	"crypto/tls"
 	"fmt"
 	"github.com/go-redis/redis/v8"
+	"github.com/mehgokalp/insider-project/cmd"
 	"github.com/mehgokalp/insider-project/cmd/engine/messenger"
 	"github.com/mehgokalp/insider-project/cmd/server"
 	"github.com/mehgokalp/insider-project/pkg/config"
@@ -63,9 +64,8 @@ func main() {
 		),
 	)
 
-	rootCmd.AddCommand(
-		messenger.MessengerCmd(ctx, logger, requester, redisMessageRepository),
-	)
+	rootCmd.AddCommand(messenger.MessengerCmd(ctx, logger, requester, redisMessageRepository))
+	rootCmd.AddCommand(cmd.PopulateCmd(db))
 
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(eris.ToString(err, true))

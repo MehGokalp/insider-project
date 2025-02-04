@@ -17,7 +17,7 @@ import (
 func Server(
 	cfg *config.Config,
 	logger log.Logger,
-	pkgDatabaseRepository *pkgDatabaseRepository.MessageRepository,
+	messageRepository *pkgDatabaseRepository.MessageRepository,
 ) *cobra.Command {
 	cmdName := "server"
 
@@ -27,6 +27,7 @@ func Server(
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			r := getRouter(
 				logger,
+				messageRepository,
 			)
 
 			if err := r.Run(fmt.Sprintf(":%v", cfg.Port)); err != nil {
@@ -40,6 +41,7 @@ func Server(
 
 func getRouter(
 	logger log.Logger,
+	messageRepository *pkgDatabaseRepository.MessageRepository,
 ) *gin.Engine {
 	r := gin.New()
 	r.Use(gin.ErrorLogger())
@@ -48,7 +50,7 @@ func getRouter(
 
 	v1 := r.Group("/v1")
 
-	v1.GET("/messenger/", pkgMessengerList.NewHandler(logger))
+	v1.GET("/messenger/", pkgMessengerList.NewHandler(logger, messageRepository))
 	v1.PUT("/messenger/start-stop", pkgMessengerStartStop.NewHandler(logger))
 
 	return r
