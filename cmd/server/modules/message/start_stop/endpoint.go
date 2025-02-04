@@ -42,7 +42,7 @@ func (h *Handler) Handle() {
 		return
 	}
 
-	err = h.repository.Save(h.ctx, redis.MessageEngineRunningStatus{
+	err = h.repository.UpdateStatus(h.ctx, redis.MessageEngineRunningStatus{
 		Consume: form.Status == "start",
 	})
 	if err != nil {

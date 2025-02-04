@@ -3,25 +3,30 @@ package repository
 import (
 	"context"
 	"encoding/json"
-	"github.com/mehgokalp/insider-project/pkg/redis"
+	"github.com/go-redis/redis/v8"
+	pkgRedis "github.com/mehgokalp/insider-project/pkg/redis"
 	"github.com/rotisserie/eris"
 )
 
-const messageEngineStatusKey = "message_engine_status"
+const messageEngineStatusChannel = "message_engine_status"
 
 type MessageEngineRepository struct {
-	client redis.Client
+	client pkgRedis.Client
 }
 
-func NewMessageEngineRepository(client redis.Client) *MessageEngineRepository {
+func NewMessageEngineRepository(client pkgRedis.Client) *MessageEngineRepository {
 	return &MessageEngineRepository{client: client}
 }
 
-func (r *MessageEngineRepository) Save(ctx context.Context, status redis.MessageEngineRunningStatus) error {
+func (r *MessageEngineRepository) UpdateStatus(ctx context.Context, status pkgRedis.MessageEngineRunningStatus) error {
 	parsed, err := json.Marshal(status)
 	if err != nil {
 		return eris.Wrap(err, "failed to marshal message")
 	}
 
-	return r.client.Set(ctx, messageEngineStatusKey, parsed, status.Duration()).Err()
+	return r.client.Publish(ctx, messageEngineStatusChannel, parsed).Err()
+}
+
+func (r *MessageEngineRepository) ListenStatusUpdates(ctx context.Context) *redis.PubSub {
+	return r.client.Subscribe(ctx, messageEngineStatusChannel)
 }

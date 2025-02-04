@@ -15,7 +15,6 @@ services:
   app_redis:
     image: redis:6.0-alpine
     restart: on-failure
-    command: [ "redis-server", "--notify-keyspace-events", "Kx" ]
     expose:
       - "6379"
     ports:

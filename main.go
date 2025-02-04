@@ -66,7 +66,7 @@ func main() {
 		),
 	)
 
-	rootCmd.AddCommand(message.MessageCmd(ctx, logger, requester, redisMessageRepository))
+	rootCmd.AddCommand(message.MessageCmd(ctx, logger, requester, messageRepository, redisMessageRepository, redisMessageEngineRepository))
 	rootCmd.AddCommand(cmd.PopulateCmd(db))
 
 	if err := rootCmd.Execute(); err != nil {
