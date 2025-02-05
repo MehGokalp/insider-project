@@ -10,7 +10,7 @@ services:
       PORT: 8080
       MYSQL_DSN: "user:password@tcp(app_mysql:3306)/messages?charset=utf8mb4&parseTime=True&loc=Local"
       REDIS_DSN: "redis://:@app_redis:6379"
-      MESSAGE_PROVIDER_BASE_URL: "https://webhook.site"
+      MESSAGE_PROVIDER_BASE_URL: "https://webhook.site/c64524ad-0776-4750-a086-6031c55c0fe0"
 
   app_redis:
     image: redis:6.0-alpine
