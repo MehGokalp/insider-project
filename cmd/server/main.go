@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	_ "github.com/mehgokalp/insider-project/cmd/server/docs"
 	pkgMessageList "github.com/mehgokalp/insider-project/cmd/server/modules/message/list"
 	pkgMessageStartStop "github.com/mehgokalp/insider-project/cmd/server/modules/message/start_stop"
 	"github.com/mehgokalp/insider-project/pkg/config"
@@ -12,8 +13,16 @@ import (
 	"github.com/mehgokalp/insider-project/pkg/meta"
 	pkgRedisRepository "github.com/mehgokalp/insider-project/pkg/redis/repository"
 	"github.com/spf13/cobra"
+	"github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 	"time"
 )
+
+// @title Messages API
+// @version 1.0
+// @description This is a sample server for managing messages.
+// @host localhost:8081
+// @BasePath /v1
 
 func Server(
 	cfg *config.Config,
@@ -51,6 +60,8 @@ func getRouter(
 	r.Use(gin.ErrorLogger())
 	r.Use(jsonLoggerMiddleware())
 	r.Use(gin.Recovery())
+
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	v1 := r.Group("/v1")
 

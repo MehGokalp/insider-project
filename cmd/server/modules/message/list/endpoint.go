@@ -13,6 +13,14 @@ type Handler struct {
 	repository pkgDatabaseRepository.MessageRepository
 }
 
+// NewHandler godoc
+// @Summary List messages
+// @Description Get all messages
+// @Tags messages
+// @Accept  json
+// @Produce  json
+// @Success 200 {array} Message
+// @Router /messages/ [get]
 func NewHandler(logger log.Logger, repository pkgDatabaseRepository.MessageRepository) func(*gin.Context) {
 	return func(c *gin.Context) {
 		h := Handler{

@@ -15,6 +15,17 @@ type Handler struct {
 	repository pkgRedisRepository.RedisMessageEngineRepository
 }
 
+// NewHandler godoc
+// @Summary Update message status
+// @Description Update the status of the message engine
+// @Tags messages
+// @Accept  json
+// @Produce  json
+// @Param action body startStopForm true "Action to start or stop the message engine"
+// @Success 202 {object} nil
+// @Failure 406 {object} error
+// @Failure 500 {object} error
+// @Router /messages/ [patch]
 func NewHandler(logger log.Logger, repository pkgRedisRepository.RedisMessageEngineRepository) func(*gin.Context) {
 	return func(c *gin.Context) {
 		h := Handler{
