@@ -12,10 +12,10 @@ import (
 type Handler struct {
 	ctx        *gin.Context
 	logger     log.Logger
-	repository *pkgRedisRepository.MessageEngineRepository
+	repository pkgRedisRepository.RedisMessageEngineRepository
 }
 
-func NewHandler(logger log.Logger, repository *pkgRedisRepository.MessageEngineRepository) func(*gin.Context) {
+func NewHandler(logger log.Logger, repository pkgRedisRepository.RedisMessageEngineRepository) func(*gin.Context) {
 	return func(c *gin.Context) {
 		h := Handler{
 			ctx:        c,
@@ -28,7 +28,7 @@ func NewHandler(logger log.Logger, repository *pkgRedisRepository.MessageEngineR
 }
 
 type startStopForm struct {
-	Status string `json:"status" binding:"required,oneof=start stop"`
+	Action string `json:"action" binding:"required,oneof=start stop"`
 }
 
 func (h *Handler) Handle() {
@@ -43,7 +43,7 @@ func (h *Handler) Handle() {
 	}
 
 	err = h.repository.UpdateStatus(h.ctx, redis.MessageEngineRunningStatus{
-		Consume: form.Status == "start",
+		Consume: form.Action == "start",
 	})
 	if err != nil {
 		h.logger.Errorf(eris.Wrap(err, "failed to save status").Error())

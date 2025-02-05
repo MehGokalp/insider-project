@@ -10,6 +10,10 @@ import (
 
 const MessageRepositoryPrefix = "msg"
 
+type RedisMessageRepository interface {
+	Save(ctx context.Context, message redis.Message) error
+}
+
 type MessageRepository struct {
 	client redis.Client
 	prefix string

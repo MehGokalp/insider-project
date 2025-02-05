@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/tls"
 	"fmt"
+	"github.com/go-playground/validator/v10"
 	"github.com/go-redis/redis/v8"
 	"github.com/mehgokalp/insider-project/cmd"
 	"github.com/mehgokalp/insider-project/cmd/engine/message"
@@ -43,7 +44,7 @@ func main() {
 
 	messageRepository := pkgDatabaseRepository.NewMessageRepository(db)
 
-	requester := webhook.NewRequester(&http.Client{}, cfg.MessageProvider.BaseUrl, logger)
+	requester := webhook.NewRequester(&http.Client{}, cfg.MessageProvider.BaseUrl, logger, validator.New())
 
 	redisOpt, err := redis.ParseURL(cfg.Redis.DSN)
 	if err != nil {

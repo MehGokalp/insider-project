@@ -10,10 +10,10 @@ import (
 type Handler struct {
 	ctx        *gin.Context
 	logger     log.Logger
-	repository *pkgDatabaseRepository.MessageRepository
+	repository pkgDatabaseRepository.MessageRepository
 }
 
-func NewHandler(logger log.Logger, repository *pkgDatabaseRepository.MessageRepository) func(*gin.Context) {
+func NewHandler(logger log.Logger, repository pkgDatabaseRepository.MessageRepository) func(*gin.Context) {
 	return func(c *gin.Context) {
 		h := Handler{
 			ctx:        c,

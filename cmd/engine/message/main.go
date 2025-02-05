@@ -10,15 +10,18 @@ import (
 	pkgRedisRepository "github.com/mehgokalp/insider-project/pkg/redis/repository"
 	"github.com/rotisserie/eris"
 	"github.com/spf13/cobra"
+	"time"
 )
+
+const batchMessageLimit = 2
 
 func MessageCmd(
 	ctx context.Context,
 	logger pkgLog.Logger,
-	requester *webhook.Requester,
-	messageRepository *pkgDatabaseRepository.MessageRepository,
-	redisMessageRepository *pkgRedisRepository.MessageRepository,
-	redisMessageEngineRepository *pkgRedisRepository.MessageEngineRepository,
+	requester webhook.Requester,
+	messageRepository pkgDatabaseRepository.MessageRepository,
+	redisMessageRepository pkgRedisRepository.RedisMessageRepository,
+	redisMessageEngineRepository pkgRedisRepository.RedisMessageEngineRepository,
 ) *cobra.Command {
 	cmdName := "engine:message"
 
@@ -34,6 +37,8 @@ func MessageCmd(
 				logger:                 logger,
 				messageRepository:      messageRepository,
 				redisMessageRepository: redisMessageRepository,
+				batchMessageLimit:      batchMessageLimit,
+				tickerInterval:         2 * time.Minute,
 			}
 
 			go func() {
@@ -53,25 +58,9 @@ func MessageCmd(
 				}
 			}()
 
-			return handler.handle()
+			handler.listen(ctx)
+
+			return nil
 		},
-	}
-}
-
-type handler struct {
-	consume                bool
-	logger                 pkgLog.Logger
-	requester              *webhook.Requester
-	messageRepository      *pkgDatabaseRepository.MessageRepository
-	redisMessageRepository *pkgRedisRepository.MessageRepository
-}
-
-func (h *handler) handle() error {
-	for {
-		if !h.consume {
-			continue
-		}
-
-		// todo fetch data from db send sms and update redis
 	}
 }

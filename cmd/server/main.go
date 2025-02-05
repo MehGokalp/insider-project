@@ -18,8 +18,8 @@ import (
 func Server(
 	cfg *config.Config,
 	logger log.Logger,
-	messageRepository *pkgDatabaseRepository.MessageRepository,
-	redisMessageEngineRepository *pkgRedisRepository.MessageEngineRepository,
+	messageRepository pkgDatabaseRepository.MessageRepository,
+	redisMessageEngineRepository pkgRedisRepository.RedisMessageEngineRepository,
 ) *cobra.Command {
 	cmdName := "server"
 
@@ -44,8 +44,8 @@ func Server(
 
 func getRouter(
 	logger log.Logger,
-	messageRepository *pkgDatabaseRepository.MessageRepository,
-	redisMessageEngineRepository *pkgRedisRepository.MessageEngineRepository,
+	messageRepository pkgDatabaseRepository.MessageRepository,
+	redisMessageEngineRepository pkgRedisRepository.RedisMessageEngineRepository,
 ) *gin.Engine {
 	r := gin.New()
 	r.Use(gin.ErrorLogger())

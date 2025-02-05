@@ -10,6 +10,11 @@ import (
 
 const messageEngineStatusChannel = "message_engine_status"
 
+type RedisMessageEngineRepository interface {
+	UpdateStatus(ctx context.Context, status pkgRedis.MessageEngineRunningStatus) error
+	ListenStatusUpdates(ctx context.Context) *redis.PubSub
+}
+
 type MessageEngineRepository struct {
 	client pkgRedis.Client
 }
