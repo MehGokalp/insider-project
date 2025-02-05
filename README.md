@@ -10,6 +10,10 @@
 1. Log into the main container
 2. `/root/go/src/github.com/mehgokalp/insider-project/sbin/app engine:message`
 
+## HOW TO POPULATE DUMMY DATA
+1. Log into the main container
+2. `/root/go/src/github.com/mehgokalp/insider-project/sbin/app populate`
+
 ## HOW TO RUN TESTS
 ```go
 go test ./...
