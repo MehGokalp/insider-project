@@ -1,3 +1,13 @@
+# This project is rejected by reviewers
+
+Here is the feedback:
+
+> We think it would be beneficial to further develop certain Go-specific topics, such as pointer usage, goroutine management, channel usage, concurrency structures, process control with context, graceful shutdown procedures, error handling and recovery mechanisms, and memory management.
+
+Not sure how to improve the project according to the feedback. I think the project is already using all the mentioned topics.
+
+Anyway I hope it will be helpful for someone.
+
 ## API SETUP INSTRUCTIONS
 
 1. Clone the repository
